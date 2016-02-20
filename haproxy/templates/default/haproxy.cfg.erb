@@ -70,7 +70,7 @@ frontend http-in
 
 frontend https-in
   mode http
-  bind :443 ssl crt /etc/haproxy/ssl/<%= node[:haproxy][:ssl_domain] %>.pem
+  bind :443 ssl crt /etc/haproxy/ssl/<%= node[:deploy][:application] %>.pem
 
   reqadd X-Forwarded-Proto:\ https
 

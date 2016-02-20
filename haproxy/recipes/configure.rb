@@ -12,6 +12,22 @@ template "/etc/haproxy/haproxy.cfg" do
   notifies :reload, "service[haproxy]"
 end
 
+node[:deploy].each do |application, deploy|
+  template "/etc/haproxy/ssl/#{deploy[:application]}.pem" do
+    mode 0600
+    source 'ssl.pem.erb'
+    variables :ssl => {
+      'key' => deploy[:ssl_certificate],
+      'crt' => deploy[:ssl_certificate_key],
+      'ca' => deploy[:ssl_certificate_ca]
+    }
+    notifies :restart, "service[haproxy]"
+    only_if do
+      deploy[:ssl_support]
+    end
+  end
+end
+
 execute "echo 'checking if HAProxy is not running - if so start it'" do
   not_if "pgrep haproxy"
   notifies :start, "service[haproxy]"
