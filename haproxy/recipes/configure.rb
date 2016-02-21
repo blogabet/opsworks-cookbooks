@@ -14,14 +14,11 @@ end
 
 node[:deploy].each do |application, deploy|
   template "/etc/haproxy/ssl/#{node[:haproxy][:ssl_domain]}.pem" do
-    mode 0600
-    owner "haproxy"
     source 'ssl.pem.erb'
-    variables :ssl => {
-      'key' => deploy[:ssl_certificate],
-      'crt' => deploy[:ssl_certificate_key],
-      'ca' => deploy[:ssl_certificate_ca]
-    }
+    variables :pem => "#{deploy[:ssl_certificate_key]}\n#{deploy[:ssl_certificate_crt]}\n#{deploy[:ssl_certificate_ca]}"
+    owner "haproxy"
+    group "root"
+    mode 0600
     notifies :restart, "service[haproxy]"
     only_if do
       deploy[:ssl_support]
