@@ -13,8 +13,9 @@ template "/etc/haproxy/haproxy.cfg" do
 end
 
 node[:deploy].each do |application, deploy|
-  template "/etc/haproxy/ssl/#{deploy[:application]}.pem" do
+  template "/etc/haproxy/ssl/#{application}.pem" do
     mode 0600
+    owner "haproxy"
     source 'ssl.pem.erb'
     variables :ssl => {
       'key' => deploy[:ssl_certificate],
