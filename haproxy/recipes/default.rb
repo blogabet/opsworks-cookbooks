@@ -39,6 +39,13 @@ template '/etc/haproxy/haproxy.cfg' do
   notifies :restart, "service[haproxy]"
 end
 
+directory "/etc/haproxy/ssl" do
+  action :create
+  mode 0755
+  owner 'root'
+  group 'root'
+end
+
 service 'haproxy' do
   action [:enable, :start]
 end
