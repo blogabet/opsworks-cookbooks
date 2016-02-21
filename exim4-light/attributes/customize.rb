@@ -14,9 +14,8 @@
 
 # Automatically assign smarthost_server from stack configuration
 if node[:exim4]['configtype'] == 'satelite' 
-  smarthost = node[:opsworks][:layers][:mail][:instances].first
-
-  normal['exim4']['smarthost_server']  = smarthost[:private_ip]
+  smarthost_instance = node[:exim4][:smarthost_instance]
+  normal['exim4']['smarthost_server']  = node[:opsworks][:layers][:mail][:instances][smarthost_instance][:private_ip]
   normal['exim4']['hide_mailname']     = true
   normal['exim4']['minimaldns']        = true
   normal['exim4']['localdelivery']     = 'mail_spool'
