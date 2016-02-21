@@ -16,6 +16,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+if platform?('debian','ubuntu')
+  execute "add-apt-repository ppa:#{node[:haproxy][:apt_repository]}" do
+    user "root"
+  end
+
+  execute "apt-get update" do
+    user "root"
+  end
+end
+
 package 'haproxy' do
   action :install
 end
