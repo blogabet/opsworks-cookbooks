@@ -55,4 +55,4 @@ default['exim4']['encrypted']['enabled'] = false
 default['exim4']['encrypted']['bag']     = nil
 default['exim4']['encrypted']['item']    = nil
 
-include_attribute "exim4::customize"
+include_attribute "exim4-light::customize"
