@@ -69,21 +69,21 @@ frontend http-in
 
   <% if node[:haproxy][:ssl_redirect_http] -%>
   redirect scheme https if !{ ssl_fc }
-  <% end -%>
-
-  # all domains of PHP applications
-  <% node[:haproxy][:php_applications].each do |app_name, app_config| -%>
-    <% app_config['domains'].each do |domain| -%>
+  <% else -%>
+    # all domains of PHP applications
+    <% node[:haproxy][:php_applications].each do |app_name, app_config| -%>
+      <% app_config['domains'].each do |domain| -%>
   acl php_applications hdr_end(host) -i <%= domain %>
+      <% end -%>
     <% end -%>
-  <% end -%>
 
-  <% unless node[:haproxy][:php_applications].empty? || node[:haproxy][:php_backends].empty? -%>
+    <% unless node[:haproxy][:php_applications].empty? || node[:haproxy][:php_backends].empty? -%>
   use_backend php_app_servers if php_applications
-  <% end -%>
+    <% end -%>
   
-  <% if !node[:haproxy][:php_backends].empty? -%>
+    <% if !node[:haproxy][:php_backends].empty? -%>
   default_backend php_app_servers
+    <% end -%>
   <% end -%>
 
 
