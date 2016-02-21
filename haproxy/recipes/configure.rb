@@ -13,7 +13,7 @@ template "/etc/haproxy/haproxy.cfg" do
 end
 
 node[:deploy].each do |application, deploy|
-  template "/etc/haproxy/ssl/#{application}.pem" do
+  template "/etc/haproxy/ssl/#{node[:haproxy][:ssl_domain]}.pem" do
     mode 0600
     owner "haproxy"
     source 'ssl.pem.erb'
