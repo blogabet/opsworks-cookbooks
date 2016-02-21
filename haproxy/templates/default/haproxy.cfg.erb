@@ -62,16 +62,43 @@ backend php_app_servers
 <% end -%>
 
 
-# HTTP backend is only for redirect to HTTPS
+# HTTP frontend is only for redirect to HTTPS
 frontend http-in
+  mode http
   bind :80
+
+  <% if node[:haproxy][:ssl_redirect_http] -%>
   redirect scheme https if !{ ssl_fc }
+  <% end -%>
+
+  # all domains of PHP applications
+  <% node[:haproxy][:php_applications].each do |app_name, app_config| -%>
+    <% app_config['domains'].each do |domain| -%>
+  acl php_applications hdr_end(host) -i <%= domain %>
+    <% end -%>
+  <% end -%>
+
+  <% unless node[:haproxy][:php_applications].empty? || node[:haproxy][:php_backends].empty? -%>
+  use_backend php_app_servers if php_applications
+  <% end -%>
+  
+  <% if !node[:haproxy][:php_backends].empty? -%>
+  default_backend php_app_servers
+  <% end -%>
 
 
+# HTTPS frontend (SSL SNI)
 frontend https-in
   mode http
-  bind :443 ssl crt /etc/haproxy/ssl/<%= node[:haproxy][:ssl_domain] %>.pem
 
+  # Load the default certificate first and then any found cert in the ssl/ dir
+  <% if !node[:haproxy][:ssl_default_app].empty? -%>
+  bind :443 ssl crt /etc/haproxy/ssl/<%= node[:haproxy][:ssl_default_app] %>.pem crt /etc/haproxy/ssl/
+  <% else %>
+  bind :443 ssl crt /etc/haproxy/ssl/
+  <% end %>
+
+  # Tell PHP it is behind a proxy serving HTTPS
   reqadd X-Forwarded-Proto:\ https
 
   # all domains of PHP applications

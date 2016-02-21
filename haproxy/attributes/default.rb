@@ -76,4 +76,6 @@ default[:haproxy][:enable_stats] = false
 
 default[:haproxy][:balance] = 'roundrobin'
 
+default[:haproxy][:ssl_redirect_http] = false
+
 include_attribute "haproxy::customize"
