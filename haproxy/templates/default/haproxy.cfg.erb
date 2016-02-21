@@ -94,9 +94,9 @@ frontend https-in
   # Load the default certificate first and then any found cert in the ssl/ dir
   <% if !node[:haproxy][:ssl_default_app].empty? -%>
   bind :443 ssl crt /etc/haproxy/ssl/<%= node[:haproxy][:ssl_default_app] %>.pem crt /etc/haproxy/ssl/
-  <% else %>
+  <% else -%>
   bind :443 ssl crt /etc/haproxy/ssl/
-  <% end %>
+  <% end -%>
 
   # Tell PHP it is behind a proxy serving HTTPS
   reqadd X-Forwarded-Proto:\ https
