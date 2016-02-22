@@ -77,9 +77,9 @@
   <% end -%>
   SetEnvIf User-Agent ".*MSIE.*" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
 
-  <Directory /srv/www>
+  <Directory /srv/www/>
     Options FollowSymLinks
-    AllowOverride FileInfo Options
+    AllowOverride FileInfo Options AuthConfig
     Order allow,deny
     Allow from all
   </Directory>
