@@ -5,6 +5,13 @@
   <% end -%>
   DocumentRoot <%= @params[:docroot] %>
 
+  <Directory /srv/www/>
+    Options FollowSymLinks
+    AllowOverride FileInfo Options
+    Order allow,deny
+    Allow from all
+  </Directory>
+
   <Directory <%= @params[:docroot] %>>
     Options FollowSymLinks
     AllowOverride All
@@ -69,6 +76,13 @@
   SSLCACertificateFile <%= node[:apache][:dir] %>/ssl/<%= @params[:server_name] %>.ca
   <% end -%>
   SetEnvIf User-Agent ".*MSIE.*" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
+
+  <Directory /srv/www>
+    Options FollowSymLinks
+    AllowOverride FileInfo Options
+    Order allow,deny
+    Allow from all
+  </Directory>
 
   <Directory <%= @params[:docroot] %>>
     Options FollowSymLinks
