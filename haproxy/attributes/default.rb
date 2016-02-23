@@ -80,5 +80,6 @@ default[:haproxy][:balance] = 'roundrobin'
 
 default[:haproxy][:ssl_default_app] = ''
 default[:haproxy][:ssl_redirect_http] = false
+default[:haproxy][:forceclose] = false
 
 include_attribute "haproxy::customize"
