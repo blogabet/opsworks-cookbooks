@@ -39,9 +39,9 @@ defaults
   timeout http-request <%= node[:haproxy][:http_request_timeout] %>	# A complete request may never take that long.
   <% if node[:haproxy][:httpclose] %>
   option          httpclose                                         # disable keepalive (HAProxy does not yet support the HTTP keep-alive mode)
-  <% else -%>
-  option          http-keep-alive                                   # explicitly enable keep-alive
   <% end %>
+  <% if node[:haproxy][:http_keep_alive] %>
+  option          http-keep-alive                                   # explicitly enable keep-alive
   <% end %>
   <% if node[:haproxy][:http_server_close] %>
   option          http-server-close                                 # enable HTTP connection closing on the server side
